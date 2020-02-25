@@ -12,3 +12,7 @@ glance image-list
 glance image-download --file ./example-test.img 0a[...]5dd
 glance image-download --file $FILENAME $UUID
 ```
+
+## Courses
+
+* https://github.com/openstack
