@@ -16,3 +16,4 @@ glance image-download --file $FILENAME $UUID
 ## Courses
 
 * https://github.com/openstack
+* https://github.com/openstack/networking-vpp
