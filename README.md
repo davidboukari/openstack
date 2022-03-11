@@ -14,9 +14,8 @@ sudo useradd -s /bin/bash -d /opt/stack -m stack
 echo "stack ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/stack
 sudo su - stack
 
-git clone https://github.com/openstack-dev/devstack.git -b $STACK_BRANCH devstack/
 STACK_BRANCH=stable/wallaby
-
+git clone https://github.com/openstack-dev/devstack.git -b $STACK_BRANCH devstack/
 cd devstack
 cp samples/local.conf .
 sed -i 's/#HOST_IP=w.x.y.z/HOST_IP=10.0.2.15/' local.conf
