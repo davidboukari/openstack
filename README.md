@@ -1,7 +1,10 @@
 # openstack
 
+## Stand alone installation on 1 VM with devstack
+* https://www.medo64.com/2021/04/devstack-on-virtualbox-ubuntu-20-04/
 * https://www.journaldev.com/30037/install-openstack-ubuntu-devstack
 
+## Multi node installations
 * https://raymii.org/s/tutorials/Openstack_Glance_Image_Download.html
 * https://docs.openstack.org/glance/latest/admin/manage-images.html
 
