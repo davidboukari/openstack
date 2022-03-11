@@ -14,16 +14,32 @@ sudo useradd -s /bin/bash -d /opt/stack -m stack
 echo "stack ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/stack
 sudo su - stack
 
+tee  configure_openstack.sh<<EOF
+#!/bin/bash
+
+IP=achanger
+ADMIN_PASSWORD=achanger
+DATABASE_PASSWORD=$ADMIN_PASSWORD
+RABBIT_PASSWORD=$ADMIN_PASSWORD
+SERVICE_PASSWORD=$ADMIN_PASSWORD
+
+
 STACK_BRANCH=stable/wallaby
 git clone https://github.com/openstack-dev/devstack.git -b $STACK_BRANCH devstack/
 cd devstack
 cp samples/local.conf .
-sed -i 's/#HOST_IP=w.x.y.z/HOST_IP=10.0.2.15/' local.conf
-sed -i 's/ADMIN_PASSWORD=nomoresecret/ADMIN_PASSWORD=devstack/' local.conf
+sed -i "s/#HOST_IP=w.x.y.z/HOST_IP=${IP}/" local.conf
+
+sed -i "s/ADMIN_PASSWORD=nomoresecret/ADMIN_PASSWORD=${ADMIN_PASSWORD}/" local.conf
+sed -i "s/DATABASE_PASSWORD=.*/DATABASE_PASSWORD=${DATABASE_PASSWORD}/" local.conf
+sed -i "s/RABBIT_PASSWORD=.*/RABBIT_PASSWORD=${RABBIT_PASSWORD}/" local.conf
+sed -i "s/SERVICE_PASSWORD=.*/SERVICE_PASSWORD=${SERVICE_PASSWORD}/" local.conf
+
 echo "#Enable heat services" >> local.conf
 echo "enable_service h-eng h-api h-api-cfn h-api-cw" >> local.conf
 echo "#Enable heat plugin" >> local.conf
 echo "enable_plugin heat https://git.openstack.org/openstack/heat $STACK_BRANCH" >> local.conf
+EOF
 
 ```
 
