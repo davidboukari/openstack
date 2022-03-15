@@ -66,3 +66,11 @@ glance image-download --file $FILENAME $UUID
 
 * https://github.com/openstack
 * https://github.com/openstack/networking-vpp
+
+## Get a token
+```
+curl  -X POST -H "Content-Type: application/json"   -d '{ "auth": { "identity": { "methods": ["password"], "password": { "user": { "name": "USERID_CHANGE_IT", "domain": { "id": "default" }, "password": "MYPASSWORD_CHANGE_IT" }  } }, "scope": { "project": { "name": "admin", "domain": { "id": "default" } } } } }' -i "http://controller:5000/v3/auth/tokens"
+
+
+
+```
