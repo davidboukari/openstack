@@ -44,6 +44,10 @@ EOF
 
 ```
 
+Get informations
+* http://192.168.0.159/dashboard/admin/info/ 
+
+
 * https://www.journaldev.com/30037/install-openstack-ubuntu-devstack
 
 * Fix for ubuntu 20.04 LTS : https://opendev.org/openstack/devstack/commit/9b0364f20ee6e076f5af14d28dd189713301280e
