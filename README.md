@@ -83,3 +83,6 @@ curl  -X POST -H "Content-Type: application/json"   -d '{ "auth": { "identity": 
 ## Get images
 * https://cloud-images.ubuntu.com/
 * http://cloud.centos.org/centos/
+
+## Tools to build images
+* https://www.packer.io/ (hashicorp)
