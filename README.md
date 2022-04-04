@@ -245,3 +245,29 @@ Apr 04 09:08:40 controller cinder-volume[6775]: ERROR cinder.service [-] Manager
 ```
 
 
+# Hypervisor
+```
+ virsh
+Welcome to virsh, the virtualization interactive terminal.
+
+Type:  'help' for help with commands
+       'quit' to quit
+
+virsh # list
+ Id    Name                           State
+----------------------------------------------------
+ 1     instance-00000004              running
+
+virsh # shutdown 1
+Domain 1 is being shutdown
+
+virsh # list
+ Id    Name                           State
+----------------------------------------------------
+
+virsh # destroy 1
+error: failed to get domain '1'
+error: Domain not found: no domain with matching name '1'
+
+```
+
