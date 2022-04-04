@@ -518,5 +518,14 @@ if (( CREATE )); then
 ```
 openstack console log show myvm1
 
-
+source openrc admin admin
+WARNING: setting legacy OS_TENANT_NAME to support cli tools.
+vagrant@controller:~/devstack$ openstack server list
++--------------------------------------+-------------+---------+--------------------------------+--------------------------+-----------+
+| ID                                   | Name        | Status  | Networks                       | Image                    | Flavor    |
++--------------------------------------+-------------+---------+--------------------------------+--------------------------+-----------+
+| 674a59d4-5665-4a01-b2d5-8ca545a992c2 | myvm2       | ACTIVE  | mynetwork2=10.2.2.10           | cirros-0.3.5-x86_64-disk | cirros256 |
+| b6acdc09-0b89-492a-b2fe-17d98b4100dc | myvm1       | ACTIVE  | mynetwork1=10.1.1.3            | cirros-0.3.5-x86_64-disk | cirros256 |
+| 95bdba24-2f9a-4e59-92aa-db94be3f49e2 | my_first_vm | SHUTOFF | public=2001:db8::d, 172.24.4.9 | cirros-0.3.5-x86_64-disk | m1.tiny   |
++--------------------------------------+-------------+---------+--------------------------------+--------------------------+-----------+
 ```
