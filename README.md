@@ -221,6 +221,27 @@ devstack@c-api.service loaded active running Devstack devstack@c-api.service
 devstack@c-sch.service loaded active running Devstack devstack@c-sch.service
 devstack@c-vol.service loaded active running Devstack devstack@c-vol.service
 
+
+# Check cinder 
+sudo systemctl restart devstack@c-*
+
+# there are errors : Apr 04 09:08:30 controller cinder-volume[6775]: ERROR cinder.volume.manager Stderr: u'  Volume group "stack-volumes-lvmdriver-1" not found\n  Cannot process volume group stack-volumes-lvmdriver-1\n'
+
+vagrant@controller:~/devstack$ sudo journalctl -f --unit devstack@c-vol
+-- Logs begin at Mon 2022-04-04 07:36:23 UTC. --
+Apr 04 09:08:30 controller cinder-volume[6775]: ERROR cinder.volume.manager Stdout: u''
+Apr 04 09:08:30 controller cinder-volume[6775]: ERROR cinder.volume.manager Stderr: u'  Volume group "stack-volumes-lvmdriver-1" not found\n  Cannot process volume group stack-volumes-lvmdriver-1\n'
+Apr 04 09:08:30 controller cinder-volume[6775]: ERROR cinder.volume.manager
+Apr 04 09:08:30 controller cinder-volume[6775]: DEBUG cinder.service [None req-7d35fd55-a5a6-4f9a-a150-9b4efc6a365f None None] Creating RPC server for service cinder-volume {{(pid=6810) start /opt/stack/cinder/cinder/service.py:219}}
+Apr 04 09:08:30 controller cinder-volume[6775]: DEBUG oslo_db.sqlalchemy.engines [None req-7d35fd55-a5a6-4f9a-a150-9b4efc6a365f None None] MySQL server mode set to STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,TRADITIONAL,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION {{(pid=6810) _check_effective_sql_mode /usr/local/lib/python2.7/dist-packages/oslo_db/sqlalchemy/engines.py:285}}
+Apr 04 09:08:30 controller cinder-volume[6775]: DEBUG cinder.service [None req-7d35fd55-a5a6-4f9a-a150-9b4efc6a365f None None] Pinning object versions for RPC server serializer to 1.27 {{(pid=6810) start /opt/stack/cinder/cinder/service.py:226}}
+Apr 04 09:08:30 controller cinder-volume[6775]: INFO cinder.volume.manager [None req-7d35fd55-a5a6-4f9a-a150-9b4efc6a365f None None] Initializing RPC dependent components of volume driver LVMVolumeDriver (3.0.0)
+Apr 04 09:08:30 controller cinder-volume[6775]: ERROR cinder.utils [None req-7d35fd55-a5a6-4f9a-a150-9b4efc6a365f None None] Volume driver LVMVolumeDriver not initialized
+Apr 04 09:08:30 controller cinder-volume[6775]: ERROR cinder.volume.manager [None req-7d35fd55-a5a6-4f9a-a150-9b4efc6a365f None None] Cannot complete RPC initialization because driver isn't initialized properly.: DriverNotInitialized: Volume driver not ready.
+Apr 04 09:08:34 controller cinder-volume[6775]: WARNING cinder.volume.manager [None req-96ee484f-e21d-43e2-bc1a-75f5e77adbe9 None None] Update driver status failed: (config name lvmdriver-1) is uninitialized.
+Apr 04 09:08:40 controller cinder-volume[6775]: ERROR cinder.service [-] Manager for service cinder-volume controller@lvmdriver-1 is reporting problems, not sending heartbeat. Service will appear "down".
+
+
 ```
 
 
