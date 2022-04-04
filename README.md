@@ -213,3 +213,14 @@ vagrant@controller:~/devstack$ openstack server show my_first_vm
 +-------------------------------------+-----------------------------------------------------------------+
 ```
 
+## Troubleshooting
+```
+systemctl list-units devstack@c-*
+UNIT                   LOAD   ACTIVE SUB     DESCRIPTION
+devstack@c-api.service loaded active running Devstack devstack@c-api.service
+devstack@c-sch.service loaded active running Devstack devstack@c-sch.service
+devstack@c-vol.service loaded active running Devstack devstack@c-vol.service
+
+```
+
+
