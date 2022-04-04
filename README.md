@@ -92,6 +92,7 @@ curl  -X POST -H "Content-Type: application/json"   -d '{ "auth": { "identity": 
 
 
 ## Openstack CLI
+* https://docs.openstack.org/python-openstackclient/latest/
 
 ### Create a VM
 ```
