@@ -512,3 +512,11 @@ if (( CREATE )); then
  create_volume   # Allocate some storage space
 
 ```
+
+## Networking
+
+```
+openstack console log show myvm1
+
+
+```
