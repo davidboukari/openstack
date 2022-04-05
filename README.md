@@ -705,6 +705,9 @@ round-trip min/avg/max = 0.511/0.657/0.740 ms
 
 ## Create a cloud by command line
 ```
+# -------------------------------
+# Create the keypair
+# -------------------------------
 vagrant@controller:~$ openstack keypair create mykey > ~/.ssh/mykey
 vagrant@controller:~$ ls -lahtr ~/.ssh/
 total 16K
@@ -712,6 +715,11 @@ total 16K
 drwxr-xr-x 7 vagrant vagrant 4.0K Apr  5 08:40 ..
 drwx------ 2 vagrant root    4.0K Apr  5 08:43 .
 -rw-rw-r-- 1 vagrant vagrant 1.7K Apr  5 08:43 mykey
+
+
+# -------------------------------
+# Create the nertwork
+# -------------------------------
 vagrant@controller:~$ openstack network create mynetwork1
 +---------------------------+--------------------------------------+
 | Field                     | Value                                |
@@ -744,6 +752,8 @@ vagrant@controller:~$ openstack network create mynetwork1
 | tags                      |                                      |
 | updated_at                | 2022-04-05T08:45:47Z                 |
 +---------------------------+--------------------------------------+
+
+
 vagrant@controller:~$ openstack network create mynetwork2
 +---------------------------+--------------------------------------+
 | Field                     | Value                                |
@@ -776,6 +786,7 @@ vagrant@controller:~$ openstack network create mynetwork2
 | tags                      |                                      |
 | updated_at                | 2022-04-05T08:46:02Z                 |
 +---------------------------+--------------------------------------+
+
 vagrant@controller:~$ openstack network list
 +--------------------------------------+------------+----------------------------------------------------------------------------+
 | ID                                   | Name       | Subnets                                                                    |
@@ -785,6 +796,10 @@ vagrant@controller:~$ openstack network list
 | e83755ae-b262-4cb7-bf1a-d36815dbc148 | mynetwork1 |                                                                            |
 | f883cafc-3607-40eb-a6f4-1cb4fd010038 | mynetwork2 |                                                                            |
 +--------------------------------------+------------+----------------------------------------------------------------------------+
+
+# -------------------------------
+# Create the subnet
+# -------------------------------
 vagrant@controller:~$ openstack subnet list
 +--------------------------------------+---------------------+--------------------------------------+---------------------+
 | ID                                   | Name                | Network                              | Subnet              |
@@ -794,6 +809,7 @@ vagrant@controller:~$ openstack subnet list
 | 46363502-58f6-4a43-8b05-b8aab9cbe8a5 | private-subnet      | e5ab4a07-4f40-41a2-be23-48f8b11f4630 | 10.0.0.0/26         |
 | e5b354ae-cddf-4b2b-bafb-bdbee30eb9da | ipv6-private-subnet | e5ab4a07-4f40-41a2-be23-48f8b11f4630 | fd4d:7949:115a::/64 |
 +--------------------------------------+---------------------+--------------------------------------+---------------------+
+
 vagrant@controller:~$ openstack subnet create --help
 usage: openstack subnet create [-h] [-f {json,shell,table,value,yaml}]
                                [-c COLUMN] [--max-width <integer>]
@@ -815,101 +831,9 @@ usage: openstack subnet create [-h] [-f {json,shell,table,value,yaml}]
                                [--service-type <service-type>]
                                [--tag <tag> | --no-tag]
                                name
+... 
 
-Create a subnet
 
-positional arguments:
-  name                  New subnet name
-
-optional arguments:
-  -h, --help            show this help message and exit
-  --project <project>   Owner's project (name or ID)
-  --project-domain <project-domain>
-                        Domain the project belongs to (name or ID). This can
-                        be used in case collisions between project names
-                        exist.
-  --subnet-pool <subnet-pool>
-                        Subnet pool from which this subnet will obtain a CIDR
-                        (Name or ID)
-  --use-default-subnet-pool
-                        Use default subnet pool for --ip-version
-  --prefix-length <prefix-length>
-                        Prefix length for subnet allocation from subnet pool
-  --subnet-range <subnet-range>
-                        Subnet range in CIDR notation (required if --subnet-
-                        pool is not specified, optional otherwise)
-  --dhcp                Enable DHCP (default)
-  --no-dhcp             Disable DHCP
-  --gateway <gateway>   Specify a gateway for the subnet. The three options
-                        are: <ip-address>: Specific IP address to use as the
-                        gateway, 'auto': Gateway address should automatically
-                        be chosen from within the subnet itself, 'none': This
-                        subnet will not use a gateway, e.g.: --gateway
-                        192.168.9.1, --gateway auto, --gateway none (default
-                        is 'auto').
-  --ip-version {4,6}    IP version (default is 4). Note that when subnet pool
-                        is specified, IP version is determined from the subnet
-                        pool and this option is ignored.
-  --ipv6-ra-mode {dhcpv6-stateful,dhcpv6-stateless,slaac}
-                        IPv6 RA (Router Advertisement) mode, valid modes:
-                        [dhcpv6-stateful, dhcpv6-stateless, slaac]
-  --ipv6-address-mode {dhcpv6-stateful,dhcpv6-stateless,slaac}
-                        IPv6 address mode, valid modes: [dhcpv6-stateful,
-                        dhcpv6-stateless, slaac]
-  --network-segment <network-segment>
-                        Network segment to associate with this subnet (name or
-                        ID)
-  --network <network>   Network this subnet belongs to (name or ID)
-  --description <description>
-                        Set subnet description
-  --allocation-pool start=<ip-address>,end=<ip-address>
-                        Allocation pool IP addresses for this subnet e.g.:
-                        start=192.168.199.2,end=192.168.199.254 (repeat option
-                        to add multiple IP addresses)
-  --dns-nameserver <dns-nameserver>
-                        DNS server for this subnet (repeat option to set
-                        multiple DNS servers)
-  --host-route destination=<subnet>,gateway=<ip-address>
-                        Additional route for this subnet e.g.:
-                        destination=10.10.0.0/16,gateway=192.168.71.254
-                        destination: destination subnet (in CIDR notation)
-                        gateway: nexthop IP address (repeat option to add
-                        multiple routes)
-  --service-type <service-type>
-                        Service type for this subnet e.g.:
-                        network:floatingip_agent_gateway. Must be a valid
-                        device owner value for a network port (repeat option
-                        to set multiple service types)
-  --tag <tag>           Tag to be added to the subnet (repeat option to set
-                        multiple tags)
-  --no-tag              No tags associated with the subnet
-
-output formatters:
-  output formatter options
-
-  -f {json,shell,table,value,yaml}, --format {json,shell,table,value,yaml}
-                        the output format, defaults to table
-  -c COLUMN, --column COLUMN
-                        specify the column(s) to include, can be repeated
-
-table formatter:
-  --max-width <integer>
-                        Maximum display width, <1 to disable. You can also use
-                        the CLIFF_MAX_TERM_WIDTH environment variable, but the
-                        parameter takes precedence.
-  --fit-width           Fit the table to the display width. Implied if --max-
-                        width greater than 0. Set the environment variable
-                        CLIFF_FIT_WIDTH=1 to always enable
-  --print-empty         Print empty table if there is no data to show.
-
-json formatter:
-  --noindent            whether to disable indenting the JSON
-
-shell formatter:
-  a format a UNIX shell can parse (variable="value")
-
-  --prefix PREFIX       add a prefix to all variable names
-vagrant@controller:~$ #openstack subnet create --subnet-range 10.1.1.0/24 --dns-nameserver 8.8.8.8 --network.
 vagrant@controller:~$ openstack network list
 +--------------------------------------+------------+----------------------------------------------------------------------------+
 | ID                                   | Name       | Subnets                                                                    |
@@ -919,6 +843,8 @@ vagrant@controller:~$ openstack network list
 | e83755ae-b262-4cb7-bf1a-d36815dbc148 | mynetwork1 |                                                                            |
 | f883cafc-3607-40eb-a6f4-1cb4fd010038 | mynetwork2 |                                                                            |
 +--------------------------------------+------------+----------------------------------------------------------------------------+
+
+
 vagrant@controller:~$ openstack subnet create --subnet-range 10.1.1.0/24 --dns-nameserver 8.8.8.8 --network mynetwork1 mysubnet1
 +-------------------------+--------------------------------------+
 | Field                   | Value                                |
@@ -946,6 +872,8 @@ vagrant@controller:~$ openstack subnet create --subnet-range 10.1.1.0/24 --dns-n
 | updated_at              | 2022-04-05T08:56:04Z                 |
 | use_default_subnet_pool | None                                 |
 +-------------------------+--------------------------------------+
+
+
 vagrant@controller:~$ openstack subnet create --subnet-range 10.2.2.0/24 --dns-nameserver 8.8.8.8 --network mynetwork2 mysubnet2
 +-------------------------+--------------------------------------+
 | Field                   | Value                                |
@@ -973,6 +901,8 @@ vagrant@controller:~$ openstack subnet create --subnet-range 10.2.2.0/24 --dns-n
 | updated_at              | 2022-04-05T08:56:25Z                 |
 | use_default_subnet_pool | None                                 |
 +-------------------------+--------------------------------------+
+
+
 vagrant@controller:~$ openstack subnet list
 +--------------------------------------+---------------------+--------------------------------------+---------------------+
 | ID                                   | Name                | Network                              | Subnet              |
@@ -984,12 +914,18 @@ vagrant@controller:~$ openstack subnet list
 | 8a403578-8fbc-48d6-a248-ac06865954da | mysubnet2           | f883cafc-3607-40eb-a6f4-1cb4fd010038 | 10.2.2.0/24         |
 | e5b354ae-cddf-4b2b-bafb-bdbee30eb9da | ipv6-private-subnet | e5ab4a07-4f40-41a2-be23-48f8b11f4630 | fd4d:7949:115a::/64 |
 +--------------------------------------+---------------------+--------------------------------------+---------------------+
+
+# -------------------------------
+# Create the router
+# -------------------------------
 vagrant@controller:~$ openstack router list
 +--------------------------------------+---------+--------+-------+-------------+-------+----------------------------------+
 | ID                                   | Name    | Status | State | Distributed | HA    | Project                          |
 +--------------------------------------+---------+--------+-------+-------------+-------+----------------------------------+
 | f4c4910a-4b39-4dd9-8928-77fefa6a3ec0 | router1 | ACTIVE | UP    | False       | False | 09a20d123b024904a0bea9a4d7b1cae1 |
 +--------------------------------------+---------+--------+-------+-------------+-------+----------------------------------+
+
+
 vagrant@controller:~$ openstack router create myrouter
 +-------------------------+--------------------------------------+
 | Field                   | Value                                |
@@ -1012,6 +948,8 @@ vagrant@controller:~$ openstack router create myrouter
 | tags                    |                                      |
 | updated_at              | 2022-04-05T09:01:41Z                 |
 +-------------------------+--------------------------------------+
+
+
 vagrant@controller:~$ openstack router list
 +--------------------------------------+----------+--------+-------+-------------+-------+----------------------------------+
 | ID                                   | Name     | Status | State | Distributed | HA    | Project                          |
@@ -1019,19 +957,13 @@ vagrant@controller:~$ openstack router list
 | bd7ceb3a-49f4-418d-a9c5-88ccc1212df0 | myrouter | ACTIVE | UP    | False       | False | 200d842136a249ff9778d3bb2d9e9202 |
 | f4c4910a-4b39-4dd9-8928-77fefa6a3ec0 | router1  | ACTIVE | UP    | False       | False | 09a20d123b024904a0bea9a4d7b1cae1 |
 +--------------------------------------+----------+--------+-------+-------------+-------+----------------------------------+
-vagrant@controller:~$ openstack router add subnet --help
-usage: openstack router add subnet [-h] <router> <subnet>
 
-Add a subnet to a router
-
-positional arguments:
-  <router>    Router to which subnet will be added (name or ID)
-  <subnet>    Subnet to be added (name or ID)
-
-optional arguments:
-  -h, --help  show this help message and exit
 vagrant@controller:~$ openstack router add subnet myrouter mysubnet1
 vagrant@controller:~$ openstack router add subnet myrouter mysubnet2
+
+# -------------------------------
+# Create the security group
+# -------------------------------
 vagrant@controller:~$ openstack security group list
 +--------------------------------------+---------+------------------------+----------------------------------+
 | ID                                   | Name    | Description            | Project                          |
@@ -1052,49 +984,10 @@ Command "security" matches:
   security group rule show
   security group set
   security group show
-vagrant@controller:~$ openstack security group rule show 1a0a86c3-6290-4624-a029-f553f963f752
-Error while executing command: No SecurityGroupRule found for 1a0a86c3-6290-4624-a029-f553f963f752
-vagrant@controller:~$ openstack security group rule show --help
-usage: openstack security group rule show [-h]
-                                          [-f {json,shell,table,value,yaml}]
-                                          [-c COLUMN] [--max-width <integer>]
-                                          [--fit-width] [--print-empty]
-                                          [--noindent] [--prefix PREFIX]
-                                          <rule>
+  
 
-Display security group rule details
 
-positional arguments:
-  <rule>                Security group rule to display (ID only)
 
-optional arguments:
-  -h, --help            show this help message and exit
-
-output formatters:
-  output formatter options
-
-  -f {json,shell,table,value,yaml}, --format {json,shell,table,value,yaml}
-                        the output format, defaults to table
-  -c COLUMN, --column COLUMN
-                        specify the column(s) to include, can be repeated
-
-table formatter:
-  --max-width <integer>
-                        Maximum display width, <1 to disable. You can also use
-                        the CLIFF_MAX_TERM_WIDTH environment variable, but the
-                        parameter takes precedence.
-  --fit-width           Fit the table to the display width. Implied if --max-
-                        width greater than 0. Set the environment variable
-                        CLIFF_FIT_WIDTH=1 to always enable
-  --print-empty         Print empty table if there is no data to show.
-
-json formatter:
-  --noindent            whether to disable indenting the JSON
-
-shell formatter:
-  a format a UNIX shell can parse (variable="value")
-
-  --prefix PREFIX       add a prefix to all variable names
 vagrant@controller:~$ openstack security group show 1a0a86c3-6290-4624-a029-f553f963f752
 +-----------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Field           | Value                                                                                                                                                                                                          |
@@ -1111,6 +1004,8 @@ vagrant@controller:~$ openstack security group show 1a0a86c3-6290-4624-a029-f553
 |                 | created_at='2017-12-04T21:00:03Z', direction='egress', ethertype='IPv4', id='c9812167-7b2b-484e-90c6-58fce28e18bd', updated_at='2017-12-04T21:00:03Z'                                                          |
 | updated_at      | 2017-12-04T21:00:03Z                                                                                                                                                                                           |
 +-----------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+
 vagrant@controller:~$ openstack security group rules show 57e7ecfa-0da4-40ef-ba15-af515bc67988
 openstack: 'security group rules show 57e7ecfa-0da4-40ef-ba15-af515bc67988' is not an openstack command. See 'openstack --help'.
 Did you mean one of these?
@@ -1136,6 +1031,8 @@ Did you mean one of these?
   secret order list
   secret store
   secret update
+
+
 vagrant@controller:~$ openstack security group rule show 57e7ecfa-0da4-40ef-ba15-af515bc67988
 
 +-------------------+--------------------------------------+
@@ -1172,6 +1069,8 @@ vagrant@controller:~$ openstack security group create mysecgroup
 |                 | created_at='2022-04-05T09:10:32Z', direction='egress', ethertype='IPv6', id='fbefa687-7be8-43ee-92fe-0491f6c8bc7b', updated_at='2022-04-05T09:10:32Z' |
 | updated_at      | 2022-04-05T09:10:32Z                                                                                                                                  |
 +-----------------+-------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+
 vagrant@controller:~$ openstack security group list
 +--------------------------------------+------------+------------------------+----------------------------------+
 | ID                                   | Name       | Description            | Project                          |
@@ -1182,6 +1081,8 @@ vagrant@controller:~$ openstack security group list
 | 97043a79-18b4-46b3-b857-d9e3ff78f4e0 | default    | Default security group |                                  |
 | dbab7bfd-51c6-4235-980d-81170fffc73c | default    | Default security group | d817aae2059a4de9818c059995df570a |
 +--------------------------------------+------------+------------------------+----------------------------------+
+
+
 vagrant@controller:~$ openstack security group rule create --ingress --dst-port 22 mysecgroup
 +-------------------+--------------------------------------+
 | Field             | Value                                |
@@ -1202,6 +1103,8 @@ vagrant@controller:~$ openstack security group rule create --ingress --dst-port 
 | security_group_id | 8ad65813-4333-407a-8428-9a2657c76ed2 |
 | updated_at        | 2022-04-05T09:11:24Z                 |
 +-------------------+--------------------------------------+
+
+
 vagrant@controller:~$ openstack security group rule create --ingress --protocol icmp mysecgroup
 +-------------------+--------------------------------------+
 | Field             | Value                                |
@@ -1222,6 +1125,8 @@ vagrant@controller:~$ openstack security group rule create --ingress --protocol 
 | security_group_id | 8ad65813-4333-407a-8428-9a2657c76ed2 |
 | updated_at        | 2022-04-05T09:12:28Z                 |
 +-------------------+--------------------------------------+
+
+
 vagrant@controller:~$ openstack security group show mysecgroup
 +-----------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Field           | Value                                                                                                                                                                                                                                          |
@@ -1238,6 +1143,73 @@ vagrant@controller:~$ openstack security group show mysecgroup
 |                 | created_at='2022-04-05T09:10:32Z', direction='egress', ethertype='IPv6', id='fbefa687-7be8-43ee-92fe-0491f6c8bc7b', updated_at='2022-04-05T09:10:32Z'                                                                                          |
 | updated_at      | 2022-04-05T09:12:28Z                                                                                                                                                                                                                           |
 +-----------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+
+
+# -------------------------------
+# Create the AZ
+# -------------------------------
+vagrant@controller:~$ openstack aggregate create --zone az2 az2
++-------------------+----------------------------+
+| Field             | Value                      |
++-------------------+----------------------------+
+| availability_zone | az2                        |
+| created_at        | 2022-04-05T09:21:02.209826 |
+| deleted           | False                      |
+| deleted_at        | None                       |
+| id                | 3                          |
+| name              | az2                        |
+| updated_at        | None                       |
++-------------------+----------------------------+
+vagrant@controller:~$ openstack aggregate list
++----+------+-------------------+
+| ID | Name | Availability Zone |
++----+------+-------------------+
+|  3 | az2  | az2               |
++----+------+-------------------+
+
+vagrant@controller:~$ openstack aggregate add host az2 node1
++-------------------+--------------------------------+
+| Field             | Value                          |
++-------------------+--------------------------------+
+| availability_zone | az2                            |
+| created_at        | 2022-04-05T09:21:02.000000     |
+| deleted           | False                          |
+| deleted_at        | None                           |
+| hosts             | [u'node1']                     |
+| id                | 3                              |
+| metadata          | {u'availability_zone': u'az2'} |
+| name              | az2                            |
+| updated_at        | None                           |
++-------------------+--------------------------------+
+vagrant@controller:~$ openstack aggregate show az2
++-------------------+----------------------------+
+| Field             | Value                      |
++-------------------+----------------------------+
+| availability_zone | az2                        |
+| created_at        | 2022-04-05T09:21:02.000000 |
+| deleted           | False                      |
+| deleted_at        | None                       |
+| hosts             | [u'node1']                 |
+| id                | 3                          |
+| name              | az2                        |
+| properties        |                            |
+| updated_at        | None                       |
++-------------------+----------------------------+
+vagrant@controller:~$ openstack aggregate list
++----+------+-------------------+
+| ID | Name | Availability Zone |
++----+------+-------------------+
+|  3 | az2  | az2               |
++----+------+-------------------+
+
+
+
+# -------------------------------
+# Create the VMs
+# -------------------------------
+
+
 vagrant@controller:~$ openstack image list
 +--------------------------------------+---------------------------------+--------+
 | ID                                   | Name                            | Status |
@@ -1260,12 +1232,16 @@ vagrant@controller:~$ openstack flavor list
 | d3 | ds2G      |  2048 |   10 |         0 |     2 | True      |
 | d4 | ds4G      |  4096 |   20 |         0 |     4 | True      |
 +----+-----------+-------+------+-----------+-------+-----------+
+
+
 vagrant@controller:~$ openstack keypair list
 +-------+-------------------------------------------------+
 | Name  | Fingerprint                                     |
 +-------+-------------------------------------------------+
 | mykey | 95:c6:0b:42:c6:49:a9:ba:23:a2:26:86:2f:16:49:66 |
 +-------+-------------------------------------------------+
+
+
 vagrant@controller:~$ openstack network list
 +--------------------------------------+------------+----------------------------------------------------------------------------+
 | ID                                   | Name       | Subnets                                                                    |
@@ -1275,6 +1251,8 @@ vagrant@controller:~$ openstack network list
 | e83755ae-b262-4cb7-bf1a-d36815dbc148 | mynetwork1 | 49b594ff-a997-4ce8-9af0-598e15128df8                                       |
 | f883cafc-3607-40eb-a6f4-1cb4fd010038 | mynetwork2 | 8a403578-8fbc-48d6-a248-ac06865954da                                       |
 +--------------------------------------+------------+----------------------------------------------------------------------------+
+
+
 vagrant@controller:~$ openstack security group list
 +--------------------------------------+------------+------------------------+----------------------------------+
 | ID                                   | Name       | Description            | Project                          |
@@ -1285,6 +1263,8 @@ vagrant@controller:~$ openstack security group list
 | 97043a79-18b4-46b3-b857-d9e3ff78f4e0 | default    | Default security group |                                  |
 | dbab7bfd-51c6-4235-980d-81170fffc73c | default    | Default security group | d817aae2059a4de9818c059995df570a |
 +--------------------------------------+------------+------------------------+----------------------------------+
+
+
 vagrant@controller:~$ openstack aggregate create --zone az2 az2
 +-------------------+----------------------------+
 | Field             | Value                      |
@@ -1297,13 +1277,16 @@ vagrant@controller:~$ openstack aggregate create --zone az2 az2
 | name              | az2                        |
 | updated_at        | None                       |
 +-------------------+----------------------------+
+
+
 vagrant@controller:~$ openstack aggregate list
 +----+------+-------------------+
 | ID | Name | Availability Zone |
 +----+------+-------------------+
 |  3 | az2  | az2               |
 +----+------+-------------------+
-vagrant@controller:~$ #openstack server create --image cirros-0.3.5-x86_64-disk --flavor 1 --keyname mykey --network
+
+
 vagrant@controller:~$ openstack network list
 +--------------------------------------+------------+----------------------------------------------------------------------------+
 | ID                                   | Name       | Subnets                                                                    |
@@ -1313,67 +1296,11 @@ vagrant@controller:~$ openstack network list
 | e83755ae-b262-4cb7-bf1a-d36815dbc148 | mynetwork1 | 49b594ff-a997-4ce8-9af0-598e15128df8                                       |
 | f883cafc-3607-40eb-a6f4-1cb4fd010038 | mynetwork2 | 8a403578-8fbc-48d6-a248-ac06865954da                                       |
 +--------------------------------------+------------+----------------------------------------------------------------------------+
-vagrant@controller:~$ #openstack server create --image cirros-0.3.5-x86_64-disk --flavor 1 --keyname mykey --network  mynetwork1 --security-group mysecgroup --availabity-zone nova myvm1
-vagrant@controller:~$ openstack server create --image cirros-0.3.5-x86_64-disk --flavor 1 --keyname mykey --network  mynetwork1 --security-group mysecgroup --availabity-zone nova myvm1
-usage: openstack server create [-h] [-f {json,shell,table,value,yaml}]
-                               [-c COLUMN] [--max-width <integer>]
-                               [--fit-width] [--print-empty] [--noindent]
-                               [--prefix PREFIX]
-                               (--image <image> | --volume <volume>) --flavor
-                               <flavor> [--security-group <security-group>]
-                               [--key-name <key-name>]
-                               [--property <key=value>]
-                               [--file <dest-filename=source-filename>]
-                               [--user-data <user-data>]
-                               [--availability-zone <zone-name>]
-                               [--block-device-mapping <dev-name=mapping>]
-                               [--nic <net-id=net-uuid,v4-fixed-ip=ip-addr,v6-fixed-ip=ip-addr,port-id=port-uuid,auto,none>]
-                               [--network <network>] [--port <port>]
-                               [--hint <key=value>]
-                               [--config-drive <config-drive-volume>|True]
-                               [--min <count>] [--max <count>] [--wait]
-                               <server-name>
-openstack server create: error: unrecognized arguments: --keyname --availabity-zone nova myvm1
-vagrant@controller:~$ openstack server create --image cirros-0.3.5-x86_64-disk --flavor 1 --keypair mykey --network  mynetwork1 --security-group mysecgroup --availabity-zone nova myvm1
-usage: openstack server create [-h] [-f {json,shell,table,value,yaml}]
-                               [-c COLUMN] [--max-width <integer>]
-                               [--fit-width] [--print-empty] [--noindent]
-                               [--prefix PREFIX]
-                               (--image <image> | --volume <volume>) --flavor
-                               <flavor> [--security-group <security-group>]
-                               [--key-name <key-name>]
-                               [--property <key=value>]
-                               [--file <dest-filename=source-filename>]
-                               [--user-data <user-data>]
-                               [--availability-zone <zone-name>]
-                               [--block-device-mapping <dev-name=mapping>]
-                               [--nic <net-id=net-uuid,v4-fixed-ip=ip-addr,v6-fixed-ip=ip-addr,port-id=port-uuid,auto,none>]
-                               [--network <network>] [--port <port>]
-                               [--hint <key=value>]
-                               [--config-drive <config-drive-volume>|True]
-                               [--min <count>] [--max <count>] [--wait]
-                               <server-name>
-openstack server create: error: unrecognized arguments: --keypair --availabity-zone nova myvm1
-vagrant@controller:~$ openstack server create --image cirros-0.3.5-x86_64-disk --flavor 1 --key-name mykey --network  mynetwork1 --security-group mysecgroup --availabity-zone nova myvm1
-usage: openstack server create [-h] [-f {json,shell,table,value,yaml}]
-                               [-c COLUMN] [--max-width <integer>]
-                               [--fit-width] [--print-empty] [--noindent]
-                               [--prefix PREFIX]
-                               (--image <image> | --volume <volume>) --flavor
-                               <flavor> [--security-group <security-group>]
-                               [--key-name <key-name>]
-                               [--property <key=value>]
-                               [--file <dest-filename=source-filename>]
-                               [--user-data <user-data>]
-                               [--availability-zone <zone-name>]
-                               [--block-device-mapping <dev-name=mapping>]
-                               [--nic <net-id=net-uuid,v4-fixed-ip=ip-addr,v6-fixed-ip=ip-addr,port-id=port-uuid,auto,none>]
-                               [--network <network>] [--port <port>]
-                               [--hint <key=value>]
-                               [--config-drive <config-drive-volume>|True]
-                               [--min <count>] [--max <count>] [--wait]
-                               <server-name>
-openstack server create: error: unrecognized arguments: --availabity-zone myvm1
+
+
+# -------------------------------
+# Create the VMs
+# -------------------------------
 vagrant@controller:~$ openstack server create --image cirros-0.3.5-x86_64-disk --flavor 1 --key-name mykey --network  mynetwork1 --security-group mysecgroup --availability-zone nova myvm1
 +-------------------------------------+-----------------------------------------------------------------+
 | Field                               | Value                                                           |
@@ -1409,8 +1336,8 @@ vagrant@controller:~$ openstack server create --image cirros-0.3.5-x86_64-disk -
 | user_id                             | bf7206456b88476997d567f3d57c808f                                |
 | volumes_attached                    |                                                                 |
 +-------------------------------------+-----------------------------------------------------------------+
-vagrant@controller:~$ #openstack server create --image cirros-0.3.5-x86_64-disk --flavor 1 --key-name mykey --network  mynetwork2 --security-group mysecgroup --availability-zone az2 myvm2a
-vagrant@controller:~$ #openstack server create --image cirros-0.3.5-x86_64-disk --flavor 1 --key-name mykey --network  mynetwork2 --security-group mysecgroup --availability-zone az2 myvm2
+
+
 vagrant@controller:~$ openstack server list
 +--------------------------------------+-------------+---------+--------------------------------+--------------------------+---------+
 | ID                                   | Name        | Status  | Networks                       | Image                    | Flavor  |
@@ -1418,76 +1345,9 @@ vagrant@controller:~$ openstack server list
 | 2f72a0c5-0d50-4944-b83b-75e3a92d10af | myvm1       | ACTIVE  | mynetwork1=10.1.1.4            | cirros-0.3.5-x86_64-disk | m1.tiny |
 | 95bdba24-2f9a-4e59-92aa-db94be3f49e2 | my_first_vm | SHUTOFF | public=2001:db8::d, 172.24.4.9 | cirros-0.3.5-x86_64-disk | m1.tiny |
 +--------------------------------------+-------------+---------+--------------------------------+--------------------------+---------+
-vagrant@controller:~$ openstack server list
-+--------------------------------------+-------------+---------+--------------------------------+--------------------------+---------+
-| ID                                   | Name        | Status  | Networks                       | Image                    | Flavor  |
-+--------------------------------------+-------------+---------+--------------------------------+--------------------------+---------+
-| 2f72a0c5-0d50-4944-b83b-75e3a92d10af | myvm1       | ACTIVE  | mynetwork1=10.1.1.4            | cirros-0.3.5-x86_64-disk | m1.tiny |
-| 95bdba24-2f9a-4e59-92aa-db94be3f49e2 | my_first_vm | SHUTOFF | public=2001:db8::d, 172.24.4.9 | cirros-0.3.5-x86_64-disk | m1.tiny |
-+--------------------------------------+-------------+---------+--------------------------------+--------------------------+---------+
-vagrant@controller:~$ openstack server list
-+--------------------------------------+-------------+---------+--------------------------------+--------------------------+---------+
-| ID                                   | Name        | Status  | Networks                       | Image                    | Flavor  |
-+--------------------------------------+-------------+---------+--------------------------------+--------------------------+---------+
-| 2f72a0c5-0d50-4944-b83b-75e3a92d10af | myvm1       | ACTIVE  | mynetwork1=10.1.1.4            | cirros-0.3.5-x86_64-disk | m1.tiny |
-| 95bdba24-2f9a-4e59-92aa-db94be3f49e2 | my_first_vm | SHUTOFF | public=2001:db8::d, 172.24.4.9 | cirros-0.3.5-x86_64-disk | m1.tiny |
-+--------------------------------------+-------------+---------+--------------------------------+--------------------------+---------+
-vagrant@controller:~$ openstack server logs show myvm1
-openstack: 'server logs show myvm1' is not an openstack command. See 'openstack --help'.
-Did you mean one of these?
-  server add fixed ip
-  server add floating ip
-  server add port
-  server add security group
-  server add volume
-  server backup create
-  server create
-  server delete
-  server dump create
-  server event list
-  server event show
-  server group create
-  server group delete
-  server group list
-  server group show
-  server image create
-  server list
-  server lock
-  server migrate
-  server pause
-  server reboot
-  server rebuild
-  server remove fixed ip
-  server remove floating ip
-  server remove port
-  server remove security group
-  server remove volume
-  server rescue
-  server resize
-  server restore
-  server resume
-  server set
-  server shelve
-  server show
-  server ssh
-  server start
-  server stop
-  server suspend
-  server unlock
-  server unpause
-  server unrescue
-  server unset
-  server unshelve
-  service create
-  service delete
-  service list
-  service provider create
-  service provider delete
-  service provider list
-  service provider set
-  service provider show
-  service set
-  service show
+
+
+
 vagrant@controller:~$ openstack console log show myvm1
 [    0.000000] Initializing cgroup subsys cpuset
 [    0.000000] Initializing cgroup subsys cpu
@@ -1813,33 +1673,17 @@ launch-index: 0
 
 
 login as 'cirros' user. default password: 'cubswin:)'. use 'sudo' for root.
-myvm1 login: vagrant@controller:~$ openstack server create --image cirros-0.3.5-x86_64-disk --flavor 1 --key-name mykey --network  mynetwork2 --security-group mysecgroup --availability-zone az2 myvm2
-The requested availability zone is not available (HTTP 400) (Request-ID: req-c9efb454-85d0-4cf3-b780-91215c449b7b)
-vagrant@controller:~$ openstack aggregate show
-usage: openstack aggregate show [-h] [-f {json,shell,table,value,yaml}]
-                                [-c COLUMN] [--max-width <integer>]
-                                [--fit-width] [--print-empty] [--noindent]
-                                [--prefix PREFIX]
-                                <aggregate>
-openstack aggregate show: error: too few arguments
+
+
+
 vagrant@controller:~$ openstack aggregate list
 +----+------+-------------------+
 | ID | Name | Availability Zone |
 +----+------+-------------------+
 |  3 | az2  | az2               |
 +----+------+-------------------+
-vagrant@controller:~$ openstack server create --image cirros-0.3.5-x86_64-disk --flavor 1 --key-name mykey --network  mynetwork2 --security-group mysecgroup --availability-zone az2 myvm2
-The requested availability zone is not available (HTTP 400) (Request-ID: req-5fe07111-7072-4969-bb16-3517f5e3487f)
-vagrant@controller:~$ openstack aggregate --help
-Command "aggregate" matches:
-  aggregate add host
-  aggregate create
-  aggregate delete
-  aggregate list
-  aggregate remove host
-  aggregate set
-  aggregate show
-  aggregate unset
+
+
 vagrant@controller:~$ openstack aggregate show az2
 +-------------------+----------------------------+
 | Field             | Value                      |
@@ -1854,40 +1698,8 @@ vagrant@controller:~$ openstack aggregate show az2
 | properties        |                            |
 | updated_at        | None                       |
 +-------------------+----------------------------+
-vagrant@controller:~$ openstack aggregate add host az2 node1
-+-------------------+--------------------------------+
-| Field             | Value                          |
-+-------------------+--------------------------------+
-| availability_zone | az2                            |
-| created_at        | 2022-04-05T09:21:02.000000     |
-| deleted           | False                          |
-| deleted_at        | None                           |
-| hosts             | [u'node1']                     |
-| id                | 3                              |
-| metadata          | {u'availability_zone': u'az2'} |
-| name              | az2                            |
-| updated_at        | None                           |
-+-------------------+--------------------------------+
-vagrant@controller:~$ openstack aggregate show az2
-+-------------------+----------------------------+
-| Field             | Value                      |
-+-------------------+----------------------------+
-| availability_zone | az2                        |
-| created_at        | 2022-04-05T09:21:02.000000 |
-| deleted           | False                      |
-| deleted_at        | None                       |
-| hosts             | [u'node1']                 |
-| id                | 3                          |
-| name              | az2                        |
-| properties        |                            |
-| updated_at        | None                       |
-+-------------------+----------------------------+
-vagrant@controller:~$ openstack aggregate list
-+----+------+-------------------+
-| ID | Name | Availability Zone |
-+----+------+-------------------+
-|  3 | az2  | az2               |
-+----+------+-------------------+
+
+
 vagrant@controller:~$ openstack server create --image cirros-0.3.5-x86_64-disk --flavor 1 --key-name mykey --network  mynetwork2 --security-group mysecgroup --availability-zone az2 myvm2
 +-------------------------------------+-----------------------------------------------------------------+
 | Field                               | Value                                                           |
