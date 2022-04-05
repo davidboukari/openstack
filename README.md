@@ -528,4 +528,176 @@ vagrant@controller:~/devstack$ openstack server list
 | b6acdc09-0b89-492a-b2fe-17d98b4100dc | myvm1       | ACTIVE  | mynetwork1=10.1.1.3            | cirros-0.3.5-x86_64-disk | cirros256 |
 | 95bdba24-2f9a-4e59-92aa-db94be3f49e2 | my_first_vm | SHUTOFF | public=2001:db8::d, 172.24.4.9 | cirros-0.3.5-x86_64-disk | m1.tiny   |
 +--------------------------------------+-------------+---------+--------------------------------+--------------------------+-----------+
+
+
+myvm2 login: vagrant@controller:~/devstack$ openstack console log show myvm2
+
+vagrant@controller:~/devstack$ openstack router list
++--------------------------------------+----------+--------+-------+-------------+-------+----------------------------------+
+| ID                                   | Name     | Status | State | Distributed | HA    | Project                          |
++--------------------------------------+----------+--------+-------+-------------+-------+----------------------------------+
+| df8f2668-1f74-41c4-a984-1c02ec679d18 | myrouter | ACTIVE | UP    | False       | False | 200d842136a249ff9778d3bb2d9e9202 |
+| f4c4910a-4b39-4dd9-8928-77fefa6a3ec0 | router1  | ACTIVE | UP    | False       | False | 09a20d123b024904a0bea9a4d7b1cae1 |
++--------------------------------------+----------+--------+-------+-------------+-------+----------------------------------+
+
+# Namespace list
+vagrant@controller:~/devstack$ sudo ip netns ls
+qrouter-df8f2668-1f74-41c4-a984-1c02ec679d18
+qdhcp-5064de9b-536c-4d44-9187-a2ca125367a5
+qdhcp-f011b7d1-0540-418d-ad0d-be35ff400c99
+qrouter-f4c4910a-4b39-4dd9-8928-77fefa6a3ec0
+qdhcp-e5ab4a07-4f40-41a2-be23-48f8b11f4630
+
+# IP in a namespace
+vagrant@controller:~/devstack$ sudo ip netns exec qrouter-df8f2668-1f74-41c4-a984-1c02ec679d18 ip addr
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+36: qr-f7dea8e4-a6: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1450 qdisc noqueue state UNKNOWN group default qlen 1
+    link/ether fa:16:3e:f1:2b:5e brd ff:ff:ff:ff:ff:ff
+    inet 10.1.1.1/24 brd 10.1.1.255 scope global qr-f7dea8e4-a6
+       valid_lft forever preferred_lft forever
+    inet6 fe80::f816:3eff:fef1:2b5e/64 scope link
+       valid_lft forever preferred_lft forever
+37: qr-bc731fbb-da: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1450 qdisc noqueue state UNKNOWN group default qlen 1
+    link/ether fa:16:3e:c5:67:a3 brd ff:ff:ff:ff:ff:ff
+    inet 10.2.2.1/24 brd 10.2.2.255 scope global qr-bc731fbb-da
+       valid_lft forever preferred_lft forever
+    inet6 fe80::f816:3eff:fec5:67a3/64 scope link
+       valid_lft forever preferred_lft forever
+       
+# Server List      
+vagrant@controller:~/devstack$ openstack server list
++--------------------------------------+-------------+---------+--------------------------------+--------------------------+-----------+
+| ID                                   | Name        | Status  | Networks                       | Image                    | Flavor    |
++--------------------------------------+-------------+---------+--------------------------------+--------------------------+-----------+
+| 674a59d4-5665-4a01-b2d5-8ca545a992c2 | myvm2       | ACTIVE  | mynetwork2=10.2.2.10           | cirros-0.3.5-x86_64-disk | cirros256 |
+| b6acdc09-0b89-492a-b2fe-17d98b4100dc | myvm1       | ACTIVE  | mynetwork1=10.1.1.3            | cirros-0.3.5-x86_64-disk | cirros256 |
+| 95bdba24-2f9a-4e59-92aa-db94be3f49e2 | my_first_vm | SHUTOFF | public=2001:db8::d, 172.24.4.9 | cirros-0.3.5-x86_64-disk | m1.tiny   |
++--------------------------------------+-------------+---------+--------------------------------+--------------------------+-----------+
+
+# ---------------------------------------
+# ssh connexion in the namespace
+# ---------------------------------------
+vagrant@controller:~/devstack$ #sudo ip netns exec qrouter-df8f2668-1f74-41c4-a984-1c02ec679d18  ssh -i ~/.ssh/mykey cirros@10.1.1.3
+vagrant@controller:~/devstack$ sudo ip netns ls
+qrouter-df8f2668-1f74-41c4-a984-1c02ec679d18
+qdhcp-5064de9b-536c-4d44-9187-a2ca125367a5
+qdhcp-f011b7d1-0540-418d-ad0d-be35ff400c99
+qrouter-f4c4910a-4b39-4dd9-8928-77fefa6a3ec0
+qdhcp-e5ab4a07-4f40-41a2-be23-48f8b11f4630
+
+# ---------------------------------------
+# ssh connexion in the namespace
+# ---------------------------------------
+vagrant@controller:~/devstack$ sudo ip netns exec qrouter-df8f2668-1f74-41c4-a984-1c02ec679d18  ssh -i ~/.ssh/mykey cirros@10.1.1.3
+The authenticity of host '10.1.1.3 (10.1.1.3)' can't be established.
+RSA key fingerprint is SHA256:a0G7TIr5FyrDPeXxHZ/LVg6UBSZv4Y0BOaCogs3PTDM.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '10.1.1.3' (RSA) to the list of known hosts.
+$ ls
+$ hostname
+myvm1
+$ ip addr
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 16436 qdisc noqueue
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1450 qdisc pfifo_fast qlen 1000
+    link/ether fa:16:3e:6c:d1:df brd ff:ff:ff:ff:ff:ff
+    inet 10.1.1.3/24 brd 10.1.1.255 scope global eth0
+    inet6 fe80::f816:3eff:fe6c:d1df/64 scope link
+       valid_lft forever preferred_lft forever
+$ ping 10.2.2.10
+PING 10.2.2.10 (10.2.2.10): 56 data bytes
+64 bytes from 10.2.2.10: seq=0 ttl=63 time=6.836 ms
+64 bytes from 10.2.2.10: seq=1 ttl=63 time=1.593 ms
+^C
+--- 10.2.2.10 ping statistics ---
+2 packets transmitted, 2 packets received, 0% packet loss
+round-trip min/avg/max = 1.593/4.214/6.836 ms
+$ exit
+Connection to 10.1.1.3 closed.
+
+
+# ---------------------------------------
+# ovs: Open vswitch
+# ---------------------------------------
+* https://docs.openvswitch.org/en/latest/
+
+vagrant@controller:~/devstack$ sudo ovs-vsctl list-br
+br-ex
+br-int
+br-tun
+
+
+vagrant@controller:~/devstack$ sudo ovs-vsctl list-ports br-tun
+patch-int
+vxlan-c0a8210b
+
+
+vagrant@controller:~/devstack$ sudo ovs-vsctl list-ports br-int
+int-br-ex
+patch-tun
+qg-8565d8fb-aa
+qr-5b9b859b-84
+qr-bc731fbb-da
+qr-e7a10b24-54
+qr-f7dea8e4-a6
+qvo90708252-0e
+qvo9b46662b-13
+tap21371c49-7f
+tap83584174-f7
+tapd44acacc-1a
+
+
+vagrant@controller:~/devstack$ sudo ovs-vsctl list port qg-8565d8fb-aa
+_uuid               : 33db17dc-4c0f-461e-9165-4a55096bc471
+bond_active_slave   : []
+bond_downdelay      : 0
+bond_fake_iface     : false
+bond_mode           : []
+bond_updelay        : 0
+external_ids        : {}
+fake_bridge         : false
+interfaces          : [31358b29-a3eb-4b22-a413-b35654494cb4]
+lacp                : []
+mac                 : []
+name                : "qg-8565d8fb-aa"
+other_config        : {net_uuid="11741fda-b0a3-49c4-9171-89ce451b17c4", network_type=flat, physical_network=public, tag="2"}
+qos                 : []
+rstp_statistics     : {}
+rstp_status         : {}
+statistics          : {}
+status              : {}
+tag                 : 2
+trunks              : []
+vlan_mode           : []
+
+
+# ---------------------------------------
+# Check the router from a vm
+# ---------------------------------------
+vagrant@controller:~/devstack$ sudo ip netns exec qrouter-df8f2668-1f74-41c4-a984-1c02ec679d18  ssh -i ~/.ssh/mykey cirros@10.1.1.3
+$ netstat -rn
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags   MSS Window  irtt Iface
+0.0.0.0         10.1.1.1        0.0.0.0         UG        0 0          0 eth0
+10.1.1.0        0.0.0.0         255.255.255.0   U         0 0          0 eth0
+169.254.169.254 10.1.1.1        255.255.255.255 UGH       0 0          0 eth0
+$ ping 10.1.1.1
+PING 10.1.1.1 (10.1.1.1): 56 data bytes
+64 bytes from 10.1.1.1: seq=0 ttl=64 time=0.720 ms
+
+
+64 bytes from 10.1.1.1: seq=1 ttl=64 time=0.511 ms
+64 bytes from 10.1.1.1: seq=2 ttl=64 time=0.740 ms
+^C
+--- 10.1.1.1 ping statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max = 0.511/0.657/0.740 ms
 ```
