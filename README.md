@@ -704,6 +704,49 @@ round-trip min/avg/max = 0.511/0.657/0.740 ms
 
 
 ## Create a cloud by command line
+
+![image](https://user-images.githubusercontent.com/32338685/161752268-45c31ee9-2958-4da7-82d5-884a020946e8.png)
+
+```
+### Cleanup if we are asked to do so ####
+if (( CLEANUP )); then
+  echo "Cleaning up.."
+  delete_keypair
+  remove_volume
+  delete_vm $VM1
+  delete_vm $VM2
+  delete_volume
+  delete_security_group $SG
+  remove_router_interface $ROUTER $SUBNET1
+  remove_router_interface $ROUTER $SUBNET2
+  delete_router $ROUTER
+  delete_subnet $SUBNET1
+  delete_subnet $SUBNET2
+  delete_network $NET1
+  delete_network $NET2
+  delete_az
+fi
+
+### Create new resources, if we are asked to do so ###
+if (( CREATE )); then
+ echo "Creating virtual infrastructure..."
+ create_keypair
+ create_network $NET1
+ create_network $NET2
+ create_subnet $NET1 $SUBNET1 $NET1_CIDR
+ create_subnet $NET2 $SUBNET2 $NET2_CIDR
+ create_router $ROUTER
+ add_router_interface $ROUTER $SUBNET1
+ add_router_interface $ROUTER $SUBNET2
+ create_security_group $SG
+ create_az 
+ boot_vm $VM1 $NET1 nova  # Boot the first VM on NET1 and AZ named nova (default) (i.e. place VM1 on the controller)
+ boot_vm $VM2 $NET2 $AZ  # Boot the second VM on NET2 and in AZ=az2 (i.e. place VM2 on the compute node)
+ create_volume   # Allocate some storage space
+ add_volume      # Attach the storage volume to $VM1
+fi
+```
+
 ```
 # -------------------------------
 # Create the keypair
