@@ -1946,3 +1946,20 @@ $
 
 
 ```
+
+
+## Keystone
+```
+root@controller:/home/ubuntu# openstack --os-auth-url http://controller:5000/v3 \
+>   --os-project-domain-name Default --os-user-domain-name Default \
+>   --os-project-name admin --os-username admin token issue
+Password: 
++------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Field      | Value                                                                                                                                                                                   |
++------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| expires    | 2022-04-06T09:10:16+0000                                                                                                                                                                |
+| id         | gAAAAABiTUroeDxnoM_AlMiHcKPbTdcVVUFuLX8dhrK3Pt9W4FXloXMfq6_zcx2Mxhg7MfLDFioYzsmADutnB43YLT2QLpBdr5AVt3AUc3eh-_eoqw945uHGmHSDvDUVqNsJsmaTQkpKLJmxhHAxdw7aZJmsrU_5gZTdnotmmewLz6l84omcRG4 |
+| project_id | 1fdffce838fa4ac88f123f575aee60c3                                                                                                                                                        |
+| user_id    | 6d1ef754be174f45afcc0bab8b9a5ea5                                                                                                                                                        |
++------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+```
